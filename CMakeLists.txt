@@ -53,11 +53,16 @@ add_definitions(
 set_source_files_properties(${SRC_FILES} PROPERTIES VS_TOOL_OVERRIDE "None")
 
 # Example 1
-add_executable(example1 
+add_executable(Main 
 	${SRC_FILES}		
-	source/example1/example1.cpp
-	source/example1/SimpleFragmentShader.hlsl
-	source/example1/SimpleVertexShader.hlsl
+	source/Main/Main.cpp
+	source/Main/Viewer.cpp
+	source/Main/Model.cpp
+	source/Main/Controller.cpp
+	source/Shapes/Shape.cpp
+	source/Shapes/Tetrahedron.cpp
+	source/Shaders/SimpleFragmentShader.hlsl
+	source/Shaders/SimpleVertexShader.hlsl
 	common/objloader.cpp
 	common/objloader.hpp
 	common/controls.cpp
@@ -71,22 +76,20 @@ add_executable(example1
 )
 
 # working directories
-set_target_properties(example1 PROPERTIES COMPILE_DEFINITIONS "USE_ASSIMP")
-target_link_libraries(example1
+set_target_properties(Main PROPERTIES COMPILE_DEFINITIONS "USE_ASSIMP")
+target_link_libraries(Main
 	${ALL_LIBS}
 	assimp
 )
 
-
-
-set_target_properties(example1 PROPERTIES XCODE_ATTRIBUTE_CONFIGURATION_BUILD_DIR "${CMAKE_CURRENT_SOURCE_DIR}/source/example1/")
+set_target_properties(Main PROPERTIES XCODE_ATTRIBUTE_CONFIGURATION_BUILD_DIR "${CMAKE_CURRENT_SOURCE_DIR}/source/Main/")
 
 #message(${CMAKE_GENERATOR})
 if(NOT ${CMAKE_GENERATOR} STREQUAL "Xcode")
 add_custom_command(
-   TARGET example1 POST_BUILD
-   COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/example1${CMAKE_EXECUTABLE_SUFFIX}" "${CMAKE_CURRENT_SOURCE_DIR}/source/example1/"
-    COMMENT "Copying example1 files..."
+   TARGET Main POST_BUILD
+   COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/Main${CMAKE_EXECUTABLE_SUFFIX}" "${CMAKE_CURRENT_SOURCE_DIR}/source/Main/"
+    COMMENT "Copying Main files..."
 
 )
 endif()
@@ -98,6 +101,3 @@ endif()
 
 SOURCE_GROUP(common REGULAR_EXPRESSION ".*/common/.*" )
 SOURCE_GROUP(shaders REGULAR_EXPRESSION ".*/.*hlsl*" )
-
-
- 
