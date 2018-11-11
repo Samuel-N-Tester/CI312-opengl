@@ -4,27 +4,24 @@
  *  Created on: 12 Oct 2018
  *      Author: Samuel
  */
-
 #include <source/Main/Viewer.h>
+
 GLFWwindow* window;
 GLuint programID;
 GLuint VertexArrayID;
-GLuint vertexbuffer;
-GLuint elementbuffer;
-GLuint colorbuffer;
-GLuint MatrixID;
-int elementCount;
-int width;
-int height;
 
-Viewer::Viewer() {
+GLuint MatrixID;
+
+Viewer::Viewer(std::shared_ptr<Model> model_) {
+	elementCount = 0;
+	model = model_;
 	width = 1000;
 	height = 500;
 }
 
 Viewer::~Viewer() {
 	// Cleanup VBO and shader
-	glDeleteBuffers(1, &vertexbuffer);
+	// glDeleteBuffers(1, &vertexbuffer);
 	glDeleteProgram(programID);
 	glDeleteVertexArrays(1, &VertexArrayID);
 
@@ -85,69 +82,9 @@ void Viewer::init() {
 	glGenVertexArrays(1, &VertexArrayID);
 	glBindVertexArray(VertexArrayID);
 
-	buildTetrahedron(0, 0, 0, 1);
+	//buildTetrahedron(0, 0, 0, 1);
 
 	programID = LoadShaders("SimpleVertexShader.hlsl", "SimpleFragmentShader.hlsl");
-}
-
-void Viewer::buildTetrahedron (float x, float y, float z, float size){
-
-	//Calculate the dimensions
-
-	float sizeSq = pow(size, 2);
-	float h; //Height of the tetrahedron
-	float H; //Height of each triangle pane
-
-	float temp;
-	temp = sizeSq + pow(size/2, 2);
-	h = sqrt(temp);
-
-	temp = sizeSq + pow(h, 2);
-	H = sqrt(temp);
-
-
-	//Build the vertices
-
-	static const GLfloat g_vertex_buffer_data[] = {
-			x, y, z,				 //Top
-			x, y-H, z-(h/2),		 //Middle
-			x-(size/2), y-H, z+(h/2),//Left
-			x+(size/2), y-H, z+(h/2),//Right
-	};
-
-	glGenBuffers(1, &vertexbuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
-
-
-	//Build the faces
-
-	GLuint g_element_buffer_data []  {
-			0, 1, 2,//Left
-			0, 1, 3,//Right
-			0, 2, 3,//Back
-			1, 2, 3,//Bottom
-	};
-
-	glGenBuffers(1, &elementbuffer);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementbuffer);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(g_element_buffer_data), g_element_buffer_data, GL_STATIC_DRAW);
-
-
-	//Colour the vertices
-
-	static const GLfloat g_color_buffer_data[] = {
-			0.0, 1.0, 0.0f,//Top
-			1.0, 0.0, 0.0f,//Middle
-			1.0, 0.0, 0.0f,//Left
-			1.0, 0.0, 0.0f,//Right
-	};
-
-	glGenBuffers(1, &colorbuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(g_color_buffer_data), g_color_buffer_data, GL_STATIC_DRAW);
-
-	elementCount = 12;
 }
 
 bool Viewer::render() {
@@ -189,11 +126,14 @@ bool Viewer::render() {
 	glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &mvp[0][0]);
 
 	glViewport(0, 0, width/2, height);
-	addViewport();
+	for (std::shared_ptr<Shape> shape : *model->getShapes()){
+		drawShape(shape->getVertexbufferAddress(), shape->getElementbufferAddress(), shape->getColourbufferAddress());
+	}
 
 	glViewport(width/2, 0, width/2, height);
-	addViewport();
-
+	for (std::shared_ptr<Shape> shape : *model->getShapes()){
+		drawShape(shape->getVertexbufferAddress(), shape->getElementbufferAddress(), shape->getColourbufferAddress());
+	}
 
 	// Swap buffers
 
@@ -207,11 +147,11 @@ bool Viewer::render() {
 	return running;
 }
 
-void Viewer::addViewport() {
+void Viewer::drawShape(GLuint *vertexbuffer, GLuint *colorbuffer, GLuint *elementbuffer){
 	//********Add the Geometry
 	// 1rst attribute buffer : vertices
 	glEnableVertexAttribArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, *vertexbuffer);
 	glVertexAttribPointer(
 			0,			// attribute 0. No particular reason for 0, but must match the layout in the shader.
 			3,			// size
@@ -223,7 +163,7 @@ void Viewer::addViewport() {
 
 	// 2nd attribute buffer : colors
 	glEnableVertexAttribArray(1);
-	glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, *colorbuffer);
 	glVertexAttribPointer(
 			1,			// attribute 0. No particular reason for 0, but must match the layout in the shader.
 			3,			// size
@@ -233,13 +173,12 @@ void Viewer::addViewport() {
 			(void*) 0	// array buffer offset
 			);
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementbuffer);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, *elementbuffer);
 	glDrawElements(GL_TRIANGLES,
             elementCount,
             GL_UNSIGNED_INT,
             (GLvoid*) 0
 	);
-
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
 }

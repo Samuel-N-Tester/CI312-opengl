@@ -7,8 +7,6 @@
 
 // Include GLEW
 #include <GL/glew.h>
-
-// Include GLFW
 #include <glfw3.h>
 
 // Include GLM
@@ -16,8 +14,9 @@
 #include <glm/gtx/transform.hpp>
 
 // Include all .h files
-#include <source/Main/Viewer.h>
+#include <source/Main/Controller.h>
 #include <source/Main/Model.h>
+#include <source/Main/Viewer.h>
 
 //Include hpp files
 #include "common/shader.hpp"
@@ -27,20 +26,17 @@
 
 using namespace glm;
 
-bool running = true;
-
 int main(void){
 
-	Viewer viewer;
-	viewer.init();
-
 	std::shared_ptr<Model> model(new Model());
+	std::shared_ptr<Viewer> view(new Viewer(model));
+	std::shared_ptr<Controller> controller(new Controller(model, view));
 
-	while(running){
-		running = viewer.render();
-	}
+	controller->run();
 
-	viewer.~Viewer();
+	controller->~Controller();
+	view->~Viewer();
+	model->~Model();
     
     return 0;
 }

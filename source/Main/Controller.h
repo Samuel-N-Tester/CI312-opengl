@@ -1,5 +1,5 @@
 /*
- * Model.h
+ * Controller.h
  *
  *  Created on: 5 Nov 2018
  *      Author: Samuel
@@ -25,7 +25,8 @@
 #include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale, glm::perspective
 
 // Other files
-#include <source/Shapes/Shape.h>
+#include <source/Main/Model.h>
+#include <source/Main/Viewer.h>
 #include <source/Shapes/Tetrahedron.h>
 
 // Other .hpp
@@ -34,23 +35,21 @@
 #include "common/vboindexer.hpp"
 #include "common/controls.hpp"
 
-using namespace glm;
+#ifndef SOURCE_MAIN_CONTROLLER_H_
+#define SOURCE_MAIN_CONTROLLER_H_
 
-#ifndef SOURCE_MAIN_MODEL_H_
-#define SOURCE_MAIN_MODEL_H_
-
-class Model {
+class Controller {
 public:
-	Model();
-	virtual ~Model();
-	void addShape(std::shared_ptr<Shape>);
-
-	std::shared_ptr<std::vector<std::shared_ptr<Shape>>> getShapes();
-
-	void setShapes(std::shared_ptr<std::vector<std::shared_ptr<Shape>>>);
+	Controller(std::shared_ptr<Model>, std::shared_ptr<Viewer>);
+	virtual ~Controller();
+	void run();
+	void init();
+	void loop();
 
 private:
-	std::vector<std::shared_ptr<Shape>> shapes;
+	std::shared_ptr<Model> model;
+	std::shared_ptr<Viewer> view;
+	bool running;
 };
 
-#endif /* SOURCE_MAIN_MODEL_H_ */
+#endif /* SOURCE_MAIN_CONTROLLER_H_ */
