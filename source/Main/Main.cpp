@@ -32,11 +32,11 @@ int main(void){
 	std::shared_ptr<Viewer> view(new Viewer(model));
 	std::shared_ptr<Controller> controller(new Controller(model, view));
 
-	controller->run();
+    controller->run();
 
 	controller->~Controller();
 	view->~Viewer();
 	model->~Model();
-    
+
     return 0;
 }

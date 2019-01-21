@@ -44,15 +44,12 @@ public:
 	virtual ~Viewer();
 	void init();
 	bool render();
-	void buildTetrahedron(float, float, float, float);
-	void samuel(GLuint*);
 
 private:
 	void addViewport();
-	void drawShape(GLuint*, GLuint*, GLuint*);
+	void drawShape(GLuint*, GLuint*, GLuint*, int);
 
 	std::shared_ptr<Model> model;
-	int elementCount;
 	int width;
 	int height;
 };

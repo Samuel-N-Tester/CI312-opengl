@@ -19,10 +19,8 @@ Controller::~Controller() {
 
 void Controller::run(){
 	init();
-	std::shared_ptr<Shape> tetra(new Tetrahedron(0, 0, 0, 1));
-	std::shared_ptr<Shape> tetra2(new Tetrahedron(3, 3, 0, 1));
-	model->addShape(tetra);
-	model->addShape(tetra2);
+	Shape* obj2 = new Obj("ball", 0, 0, 2);
+	model->addShape(obj2);
 	loop();
 }
 

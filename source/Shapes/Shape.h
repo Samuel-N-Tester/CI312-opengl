@@ -44,18 +44,22 @@ public:
 	void setY(float);
 	void setZ(float);
 	void setVertexbuffer(GLuint);
-	void setColorbuffer(GLuint);
-	void setElementbuffer(GLuint);
+	void setColourbuffer(GLuint);
+	void setnormalbuffer(GLuint);
+	void setNormalbuffer(GLuint);
 
 	float getX();
 	float getY();
 	float getZ();
+	int getVertexCount();
 	GLuint getVertexbuffer();
 	GLuint getColourbuffer();
-	GLuint getElementbuffer();
+	GLuint getnormalbuffer();
+	GLuint getNormalbuffer();
 	GLuint* getVertexbufferAddress();
 	GLuint* getColourbufferAddress();
-	GLuint* getElementbufferAddress();
+	GLuint* getnormalbufferAddress();
+	GLuint* getNormalbufferAddress();
 
 protected:
 	void setPosition(float, float, float);
@@ -63,10 +67,10 @@ protected:
 	float xPos;
 	float yPos;
 	float zPos;
+	int vertexCount;
 	GLuint vertexBuffer;
-	GLuint elementBuffer;
-	GLuint colorBuffer;
-	int elementCount;
+	GLuint colourBuffer;
+	GLuint normalBuffer;
 };
 
 #endif /* SOURCE_MAIN_SHAPE_H_ */

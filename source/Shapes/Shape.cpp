@@ -12,9 +12,9 @@ Shape::Shape() {
 	yPos = 0.0;
 	zPos = 0.0;
 	vertexBuffer = 0;
-	elementBuffer = 0;
-	colorBuffer = 0;
-	elementCount = 0;
+	colourBuffer = 0;
+	normalBuffer = 0;
+	vertexCount = 0;
 }
 
 Shape::~Shape() {
@@ -44,12 +44,12 @@ void Shape::setVertexbuffer(GLuint vertexbuffer_){
 	vertexBuffer = vertexbuffer_;
 }
 
-void Shape::setColorbuffer(GLuint elementbuffer_){
-	elementBuffer = elementbuffer_;
+void Shape::setColourbuffer(GLuint colourbuffer_){
+	colourBuffer = colourbuffer_;
 }
 
-void Shape::setElementbuffer(GLuint colorbuffer_){
-	colorBuffer = colorbuffer_;
+void Shape::setNormalbuffer(GLuint normalbuffer_){
+	normalBuffer = normalbuffer_;
 }
 
 
@@ -66,26 +66,30 @@ float Shape::getZ(){
 	return zPos;
 }
 
+int Shape::getVertexCount(){
+	return vertexCount;
+}
+
 GLuint Shape::getVertexbuffer(){
 	return vertexBuffer;
-}
-
-GLuint Shape::getColourbuffer(){
-	return elementBuffer;
-}
-
-GLuint Shape::getElementbuffer(){
-	return colorBuffer;
 }
 
 GLuint* Shape::getVertexbufferAddress(){
 	return &vertexBuffer;
 }
 
-GLuint* Shape::getColourbufferAddress(){
-	return &elementBuffer;
+GLuint Shape::getColourbuffer(){
+	return colourBuffer;
 }
 
-GLuint* Shape::getElementbufferAddress(){
-	return &colorBuffer;
+GLuint* Shape::getColourbufferAddress(){
+	return &colourBuffer;
+}
+
+GLuint Shape::getNormalbuffer(){
+	return normalBuffer;
+}
+
+GLuint* Shape::getNormalbufferAddress(){
+	return &normalBuffer;
 }

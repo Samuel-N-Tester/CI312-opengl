@@ -15,26 +15,35 @@ Tetrahedron::Tetrahedron(float x, float y, float z, float size_) {
 	size = size_;
 
 	//Calculate the dimensions
-
 	float sizeSq = pow(size, 2);
-	float h; // Height of the tetrahedron
-	float H; // Height of each triangle pane
+	float triangleHeight;		// Height of each triangle pane
+	float tetrahedronHeight;	// Height of the tetrahedron
 
 	float temp;
 	temp = sizeSq + pow(size/2, 2);
-	h = sqrt(temp);
+	triangleHeight = sqrt(temp);
 
-	temp = sizeSq + pow(h, 2);
-	H = sqrt(temp);
-
+	temp = sizeSq + pow(triangleHeight, 2);
+	tetrahedronHeight = sqrt(temp);
 
 	//Build the vertices
 
-	static const GLfloat g_vertex_buffer_data[] = {
-			xPos, yPos, zPos,					// Top
-			xPos, yPos-H, zPos-(h/2),			// Middle
-			xPos-(size/2), yPos-H, zPos+(h/2),	// Left
-			xPos+(size/2), yPos-H, zPos+(h/2),	// Right
+	GLfloat g_vertex_buffer_data[] = {
+	        xPos, yPos+(tetrahedronHeight/2), zPos,								// Top
+			xPos, yPos-(tetrahedronHeight/2), zPos+(triangleHeight/2),			// Middle
+			xPos-(size/2), yPos-(tetrahedronHeight/2), zPos-(triangleHeight/2),	// Left
+
+	        xPos, yPos+(tetrahedronHeight/2), zPos,								// Top
+			xPos, yPos-(tetrahedronHeight/2), zPos+(triangleHeight/2),			// Middle
+			xPos+(size/2), yPos-(tetrahedronHeight/2), zPos-(triangleHeight/2),	// Right
+
+	        xPos, yPos+(tetrahedronHeight/2), zPos,								// Top
+			xPos-(size/2), yPos-(tetrahedronHeight/2), zPos-(triangleHeight/2),	// Left
+			xPos+(size/2), yPos-(tetrahedronHeight/2), zPos-(triangleHeight/2),	// Right
+
+			xPos, yPos-(tetrahedronHeight/2), zPos+(triangleHeight/2),			// Middle
+			xPos-(size/2), yPos-(tetrahedronHeight/2), zPos-(triangleHeight/2),	// Left
+			xPos+(size/2), yPos-(tetrahedronHeight/2), zPos-(triangleHeight/2),	// Right
 	};
 
 	glGenBuffers(1, &vertexBuffer);
@@ -42,36 +51,35 @@ Tetrahedron::Tetrahedron(float x, float y, float z, float size_) {
 	glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
 
 
-	//Build the faces
-
-	GLuint g_element_buffer_data []  {
-			0, 1, 2,	// Left
-			0, 1, 3,	// Right
-			0, 2, 3,	// Back
-			1, 2, 3,	// Bottom
-	};
-
-	glGenBuffers(1, &elementBuffer);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBuffer);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(g_element_buffer_data), g_element_buffer_data, GL_STATIC_DRAW);
-
-
 	//Colour the vertices
+	GLfloat g_color_buffer_data[] = {
 
-	static const GLfloat g_color_buffer_data[] = {
+			//Left Face
 			0.0, 1.0, 0.0f,	// Top
+			0.0, 1.0, 0.0f,	// Middle
+			0.0, 1.0, 0.0f,	// Left
+
+			//Right Face
+			1.0, 0.0, 0.0f,	// Top
+			1.0, 0.0, 0.0f,	// Middle
+			1.0, 0.0, 0.0f,	// Right
+
+			//Back Face
+			1.0, 0.0, 0.0f,	// Top
+			1.0, 0.0, 0.0f,	// Left
+			1.0, 0.0, 0.0f,	// Right
+
+			//Bottom Face
 			1.0, 0.0, 0.0f,	// Middle
 			1.0, 0.0, 0.0f,	// Left
 			1.0, 0.0, 0.0f,	// Right
 	};
 
-	glGenBuffers(1, &colorBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
+	glGenBuffers(1, &colourBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, colourBuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(g_color_buffer_data), g_color_buffer_data, GL_STATIC_DRAW);
 
-	elementCount = 12;
-
-	std::cout << &elementBuffer << std::endl;
+	vertexCount = 12;
 }
 
 Tetrahedron::~Tetrahedron() {

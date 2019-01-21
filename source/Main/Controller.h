@@ -28,6 +28,7 @@
 #include <source/Main/Model.h>
 #include <source/Main/Viewer.h>
 #include <source/Shapes/Tetrahedron.h>
+#include <source/Shapes/Obj.h>
 
 // Other .hpp
 #include "common/shader.hpp"

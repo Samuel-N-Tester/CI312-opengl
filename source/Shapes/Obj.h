@@ -1,16 +1,21 @@
 /*
- * Model.h
+ * Obj.h
  *
- *  Created on: 5 Nov 2018
+ *  Created on: 20 Jan 2019
  *      Author: Samuel
  */
 
 // Include standard headers
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <math.h>
+#include <fstream>
 #include <iostream>
 #include <vector>
 #include <memory>
+#include <string>
+#include <regex>
 
 // Include GLEW
 #include <GL/glew.h>
@@ -26,7 +31,6 @@
 
 // Other files
 #include <source/Shapes/Shape.h>
-#include <source/Shapes/Tetrahedron.h>
 
 // Other .hpp
 #include "common/shader.hpp"
@@ -34,20 +38,17 @@
 #include "common/vboindexer.hpp"
 #include "common/controls.hpp"
 
-using namespace glm;
+#ifndef SOURCE_SHAPES_OBJ_H_
+#define SOURCE_SHAPES_OBJ_H_
 
-#ifndef SOURCE_MAIN_MODEL_H_
-#define SOURCE_MAIN_MODEL_H_
-
-class Model {
+class Obj : public Shape {
 public:
-	Model();
-	virtual ~Model();
-	void addShape(Shape* shape);
-    std::vector<Shape*> getShapes();
+	Obj(std::string, float, float, float);
+	virtual ~Obj();
 
 private:
-	std::vector<Shape*> shapes;
+	GLfloat* getObjectVertices(std::string, std::regex);
+	GLuint* getObjectFaces(std::string, std::regex);
 };
 
-#endif /* SOURCE_MAIN_MODEL_H_ */
+#endif /* SOURCE_SHAPES_OBJ_H_ */

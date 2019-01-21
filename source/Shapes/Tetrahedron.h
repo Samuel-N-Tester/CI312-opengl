@@ -19,6 +19,7 @@
 #include <iostream>
 #include <vector>
 #include <memory>
+#include <string>
 
 // Include GLEW
 #include <GL/glew.h>
@@ -48,13 +49,12 @@ class Tetrahedron : public Shape {
 public:
 	Tetrahedron(float, float, float, float);
 	virtual ~Tetrahedron();
-	void buildTetrahedron();
 
-	void setSize(int);
-	int getSize();
+	void setSize(float);
+	float getSize();
 
 private:
-	int size;
+	float size;
 };
 
 #endif /* SOURCE_MAIN_TETRAHEDRON_H_ */
